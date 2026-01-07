@@ -4,33 +4,32 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>EV100 Rechner & Vergleich</title>
+
   <script src="https://cdn.tailwindcss.com"></script>
   <meta name="color-scheme" content="dark light" />
 </head>
 
-<body class="min-h-screen bg-slate-950 text-slate-100">
+<body class="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
   <div class="mx-auto max-w-5xl px-4 py-10">
     <!-- Header -->
     <header class="mb-8">
       <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <h1 class="text-2xl font-semibold tracking-tight sm:text-3xl">EV100 Rechner & Vergleich</h1>
-          <p class="mt-2 text-sm text-slate-300">
+          <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">
             EV100 = log₂(N² / t). EV100 ist der Exposure Value bezogen auf ISO 100 (ISO-normalisiert).
           </p>
         </div>
 
         <div class="flex flex-wrap items-center gap-2">
-          <button id="themeBtn"
-            class="rounded-xl bg-slate-800 px-4 py-2 text-sm font-medium text-slate-100 ring-1 ring-slate-700 hover:bg-slate-750 focus:outline-none focus:ring-2 focus:ring-indigo-400">
-            White mode
-          </button>
           <button id="fillExampleBtn"
-            class="rounded-xl bg-slate-800 px-4 py-2 text-sm font-medium text-slate-100 ring-1 ring-slate-700 hover:bg-slate-750 focus:outline-none focus:ring-2 focus:ring-indigo-400">
-            Beispiel füllen
+            class="rounded-xl bg-slate-100 px-4 py-2 text-sm font-medium text-slate-900 ring-1 ring-slate-300 hover:bg-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-400
+                   dark:bg-slate-800 dark:text-slate-100 dark:ring-slate-700 dark:hover:bg-slate-700">
+            Beispiel 
           </button>
           <button id="resetBtn"
-            class="rounded-xl bg-slate-900 px-4 py-2 text-sm font-medium text-slate-200 ring-1 ring-slate-800 hover:bg-slate-850 focus:outline-none focus:ring-2 focus:ring-indigo-400">
+            class="rounded-xl bg-white px-4 py-2 text-sm font-medium text-slate-900 ring-1 ring-slate-300 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-400
+                   dark:bg-slate-900 dark:text-slate-200 dark:ring-slate-800 dark:hover:bg-slate-800">
             Zurücksetzen
           </button>
         </div>
@@ -38,20 +37,22 @@
     </header>
 
     <!-- Aperture helper -->
-    <section class="mb-6 rounded-2xl bg-slate-900/60 p-6 ring-1 ring-slate-800 backdrop-blur">
+    <section class="mb-6 rounded-2xl bg-white p-6 ring-1 ring-slate-200 backdrop-blur
+                    dark:bg-slate-900/60 dark:ring-slate-800">
       <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <h2 class="text-lg font-semibold">Blendenreihe & Navigator</h2>
-          <p class="mt-1 text-sm text-slate-300">
+          <p class="mt-1 text-sm text-slate-600 dark:text-slate-300">
             Gib eine Blende ein. Es werden die nächstkleinere und nächstgrößere Blende aus der Reihe angezeigt.
           </p>
         </div>
 
         <div class="flex items-center gap-2">
           <label class="inline-flex items-center gap-2 text-sm">
-            <span class="text-slate-300">Schritt</span>
+            <span class="text-slate-600 dark:text-slate-300">Schritt</span>
             <select id="apStep"
-              class="rounded-xl bg-slate-950/40 px-3 py-2 text-sm ring-1 ring-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-400">
+              class="rounded-xl bg-white px-3 py-2 text-sm ring-1 ring-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-400
+                     dark:bg-slate-950/40 dark:ring-slate-800">
               <option value="full" selected>Vollstopp</option>
               <option value="third">1/3 Stop</option>
             </select>
@@ -61,39 +62,44 @@
 
       <div class="mt-5 grid gap-4 md:grid-cols-3">
         <label class="block">
-          <span class="text-sm font-medium text-slate-200">Blende eingeben (f/N)</span>
+          <span class="text-sm font-medium text-slate-900 dark:text-slate-200">Blende eingeben (f/N)</span>
           <input id="apInput" type="number" inputmode="decimal" step="0.1" min="0.7" placeholder="z. B. 2.8"
-            class="mt-2 w-full rounded-xl bg-slate-950/40 px-4 py-3 ring-1 ring-slate-800 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-400" />
-          <p class="mt-2 text-xs text-slate-400">
+            class="mt-2 w-full rounded-xl bg-white px-4 py-3 text-slate-900 ring-1 ring-slate-300 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-400
+                   dark:bg-slate-950/40 dark:text-slate-100 dark:ring-slate-800 dark:placeholder:text-slate-500" />
+          <p class="mt-2 text-xs text-slate-500 dark:text-slate-400">
             Es wird auf den nächsten Wert der gewählten Reihe gerundet.
           </p>
         </label>
 
-        <div class="rounded-2xl bg-slate-950/40 p-4 ring-1 ring-slate-800">
-          <div class="text-sm text-slate-300">Vorherige Blende</div>
+        <div class="rounded-2xl bg-slate-50 p-4 ring-1 ring-slate-200 dark:bg-slate-950/40 dark:ring-slate-800">
+          <div class="text-sm text-slate-600 dark:text-slate-300">Vorherige Blende</div>
           <div id="apPrev" class="mt-1 text-2xl font-semibold tabular-nums">—</div>
           <div class="mt-3 flex gap-2">
             <button id="setPrevA"
-              class="w-full rounded-xl bg-slate-800 px-3 py-2 text-sm font-medium ring-1 ring-slate-700 hover:bg-slate-750 focus:outline-none focus:ring-2 focus:ring-indigo-400">
+              class="w-full rounded-xl bg-slate-100 px-3 py-2 text-sm font-medium text-slate-900 ring-1 ring-slate-300 hover:bg-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-400
+                     dark:bg-slate-800 dark:text-slate-100 dark:ring-slate-700 dark:hover:bg-slate-700">
               Setze A
             </button>
             <button id="setPrevB"
-              class="w-full rounded-xl bg-slate-800 px-3 py-2 text-sm font-medium ring-1 ring-slate-700 hover:bg-slate-750 focus:outline-none focus:ring-2 focus:ring-indigo-400">
+              class="w-full rounded-xl bg-slate-100 px-3 py-2 text-sm font-medium text-slate-900 ring-1 ring-slate-300 hover:bg-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-400
+                     dark:bg-slate-800 dark:text-slate-100 dark:ring-slate-700 dark:hover:bg-slate-700">
               Setze B
             </button>
           </div>
         </div>
 
-        <div class="rounded-2xl bg-slate-950/40 p-4 ring-1 ring-slate-800">
-          <div class="text-sm text-slate-300">Nächste Blende</div>
+        <div class="rounded-2xl bg-slate-50 p-4 ring-1 ring-slate-200 dark:bg-slate-950/40 dark:ring-slate-800">
+          <div class="text-sm text-slate-600 dark:text-slate-300">Nächste Blende</div>
           <div id="apNext" class="mt-1 text-2xl font-semibold tabular-nums">—</div>
           <div class="mt-3 flex gap-2">
             <button id="setNextA"
-              class="w-full rounded-xl bg-slate-800 px-3 py-2 text-sm font-medium ring-1 ring-slate-700 hover:bg-slate-750 focus:outline-none focus:ring-2 focus:ring-indigo-400">
+              class="w-full rounded-xl bg-slate-100 px-3 py-2 text-sm font-medium text-slate-900 ring-1 ring-slate-300 hover:bg-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-400
+                     dark:bg-slate-800 dark:text-slate-100 dark:ring-slate-700 dark:hover:bg-slate-700">
               Setze A
             </button>
             <button id="setNextB"
-              class="w-full rounded-xl bg-slate-800 px-3 py-2 text-sm font-medium ring-1 ring-slate-700 hover:bg-slate-750 focus:outline-none focus:ring-2 focus:ring-indigo-400">
+              class="w-full rounded-xl bg-slate-100 px-3 py-2 text-sm font-medium text-slate-900 ring-1 ring-slate-300 hover:bg-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-400
+                     dark:bg-slate-800 dark:text-slate-100 dark:ring-slate-700 dark:hover:bg-slate-700">
               Setze B
             </button>
           </div>
@@ -101,166 +107,179 @@
       </div>
 
       <div class="mt-6">
-        <div class="text-sm font-medium text-slate-200">Blendenreihe</div>
-        <p id="apSeries" class="mt-2 text-sm text-slate-300 leading-relaxed"></p>
+        <div class="text-sm font-medium text-slate-900 dark:text-slate-200">Blendenreihe</div>
+        <p id="apSeries" class="mt-2 text-sm text-slate-600 dark:text-slate-300 leading-relaxed"></p>
       </div>
     </section>
 
     <main class="grid gap-6 lg:grid-cols-2">
       <!-- Setting A -->
-      <section class="rounded-2xl bg-slate-900/60 p-5 ring-1 ring-slate-800 backdrop-blur">
+      <section class="rounded-2xl bg-white p-5 ring-1 ring-slate-200 backdrop-blur
+                      dark:bg-slate-900/60 dark:ring-slate-800">
         <div class="flex items-start justify-between gap-4">
           <div>
             <h2 class="text-lg font-semibold">Einstellung A</h2>
-            <p class="mt-1 text-sm text-slate-300">Blende (N) und Belichtungszeit (t) eingeben.</p>
+            <p class="mt-1 text-sm text-slate-600 dark:text-slate-300">Blende (N) und Belichtungszeit (t) eingeben.</p>
           </div>
-          <span class="inline-flex items-center rounded-full bg-indigo-500/10 px-3 py-1 text-xs font-semibold text-indigo-200 ring-1 ring-indigo-500/20">
+          <span class="inline-flex items-center rounded-full bg-indigo-500/10 px-3 py-1 text-xs font-semibold text-indigo-700 ring-1 ring-indigo-500/20
+                       dark:text-indigo-200">
             EV100
           </span>
         </div>
 
         <div class="mt-5 grid gap-4 sm:grid-cols-2">
           <label class="block">
-            <span class="text-sm font-medium text-slate-200">Blende (f/N)</span>
+            <span class="text-sm font-medium text-slate-900 dark:text-slate-200">Blende (f/N)</span>
             <input id="aN" type="number" inputmode="decimal" step="0.1" min="0.7" placeholder="z. B. 2.8"
-              class="mt-2 w-full rounded-xl bg-slate-950/40 px-4 py-3 ring-1 ring-slate-800 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-400" />
+              class="mt-2 w-full rounded-xl bg-white px-4 py-3 text-slate-900 ring-1 ring-slate-300 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-400
+                     dark:bg-slate-950/40 dark:text-slate-100 dark:ring-slate-800 dark:placeholder:text-slate-500" />
           </label>
 
           <label class="block">
-            <span class="text-sm font-medium text-slate-200">Zeit (Sekunden)</span>
+            <span class="text-sm font-medium text-slate-900 dark:text-slate-200">Zeit (Sekunden)</span>
             <div class="mt-2 flex gap-2">
               <input id="aT" type="number" inputmode="decimal" step="0.0001" min="0.000001" placeholder="z. B. 0.01"
-                class="w-full rounded-xl bg-slate-950/40 px-4 py-3 ring-1 ring-slate-800 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-400" />
+                class="w-full rounded-xl bg-white px-4 py-3 text-slate-900 ring-1 ring-slate-300 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-400
+                       dark:bg-slate-950/40 dark:text-slate-100 dark:ring-slate-800 dark:placeholder:text-slate-500" />
               <button id="aParseBtn"
-                class="shrink-0 rounded-xl bg-slate-800 px-4 py-3 text-sm font-medium ring-1 ring-slate-700 hover:bg-slate-750 focus:outline-none focus:ring-2 focus:ring-indigo-400">
+                class="shrink-0 rounded-xl bg-slate-100 px-4 py-3 text-sm font-medium text-slate-900 ring-1 ring-slate-300 hover:bg-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-400
+                       dark:bg-slate-800 dark:text-slate-100 dark:ring-slate-700 dark:hover:bg-slate-700">
                 1/…
               </button>
             </div>
-            <p class="mt-2 text-xs text-slate-400">
+            <p class="mt-2 text-xs text-slate-500 dark:text-slate-400">
               Tipp: 0.01 für 1/100s. Über „1/…“ kannst du „1/100“ eingeben.
             </p>
           </label>
         </div>
 
-        <div class="mt-5 rounded-2xl bg-slate-950/40 p-4 ring-1 ring-slate-800">
+        <div class="mt-5 rounded-2xl bg-slate-50 p-4 ring-1 ring-slate-200 dark:bg-slate-950/40 dark:ring-slate-800">
           <div class="flex items-center justify-between">
-            <span class="text-sm text-slate-300">Ergebnis</span>
+            <span class="text-sm text-slate-600 dark:text-slate-300">Ergebnis</span>
             <span id="aBadge"
-              class="hidden rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-200 ring-1 ring-emerald-500/20">
+              class="hidden rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-700 ring-1 ring-emerald-500/20
+                     dark:text-emerald-200">
               OK
             </span>
           </div>
           <div class="mt-2 flex flex-col gap-1">
             <div class="flex items-baseline justify-between">
-              <span class="text-sm text-slate-300">EV100</span>
+              <span class="text-sm text-slate-600 dark:text-slate-300">EV100</span>
               <span id="aEV" class="text-xl font-semibold tabular-nums">—</span>
             </div>
-            <p id="aHint" class="text-xs text-slate-400">Werte eingeben, um EV zu berechnen.</p>
+            <p id="aHint" class="text-xs text-slate-500 dark:text-slate-400">Werte eingeben, um EV zu berechnen.</p>
           </div>
         </div>
       </section>
 
       <!-- Setting B -->
-      <section class="rounded-2xl bg-slate-900/60 p-5 ring-1 ring-slate-800 backdrop-blur">
+      <section class="rounded-2xl bg-white p-5 ring-1 ring-slate-200 backdrop-blur
+                      dark:bg-slate-900/60 dark:ring-slate-800">
         <div class="flex items-start justify-between gap-4">
           <div>
             <h2 class="text-lg font-semibold">Einstellung B</h2>
-            <p class="mt-1 text-sm text-slate-300">Zum Vergleich mit Einstellung A.</p>
+            <p class="mt-1 text-sm text-slate-600 dark:text-slate-300">Zum Vergleich mit Einstellung A.</p>
           </div>
-          <span class="inline-flex items-center rounded-full bg-indigo-500/10 px-3 py-1 text-xs font-semibold text-indigo-200 ring-1 ring-indigo-500/20">
+          <span class="inline-flex items-center rounded-full bg-indigo-500/10 px-3 py-1 text-xs font-semibold text-indigo-700 ring-1 ring-indigo-500/20
+                       dark:text-indigo-200">
             EV100
           </span>
         </div>
 
         <div class="mt-5 grid gap-4 sm:grid-cols-2">
           <label class="block">
-            <span class="text-sm font-medium text-slate-200">Blende (f/N)</span>
+            <span class="text-sm font-medium text-slate-900 dark:text-slate-200">Blende (f/N)</span>
             <input id="bN" type="number" inputmode="decimal" step="0.1" min="0.7" placeholder="z. B. 5.6"
-              class="mt-2 w-full rounded-xl bg-slate-950/40 px-4 py-3 ring-1 ring-slate-800 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-400" />
+              class="mt-2 w-full rounded-xl bg-white px-4 py-3 text-slate-900 ring-1 ring-slate-300 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-400
+                     dark:bg-slate-950/40 dark:text-slate-100 dark:ring-slate-800 dark:placeholder:text-slate-500" />
           </label>
 
           <label class="block">
-            <span class="text-sm font-medium text-slate-200">Zeit (Sekunden)</span>
+            <span class="text-sm font-medium text-slate-900 dark:text-slate-200">Zeit (Sekunden)</span>
             <div class="mt-2 flex gap-2">
-              <input id="bT" type="number" inputmode="decimal" step="0.0001" min="0.000001" placeholder="z. B. 0.02"
-                class="w-full rounded-xl bg-slate-950/40 px-4 py-3 ring-1 ring-slate-800 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-400" />
+              <input id="bT" type="number" inputmode="decimal" step="0.0001" min="0.000001" placeholder="z. B. 0.04"
+                class="w-full rounded-xl bg-white px-4 py-3 text-slate-900 ring-1 ring-slate-300 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-400
+                       dark:bg-slate-950/40 dark:text-slate-100 dark:ring-slate-800 dark:placeholder:text-slate-500" />
               <button id="bParseBtn"
-                class="shrink-0 rounded-xl bg-slate-800 px-4 py-3 text-sm font-medium ring-1 ring-slate-700 hover:bg-slate-750 focus:outline-none focus:ring-2 focus:ring-indigo-400">
+                class="shrink-0 rounded-xl bg-slate-100 px-4 py-3 text-sm font-medium text-slate-900 ring-1 ring-slate-300 hover:bg-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-400
+                       dark:bg-slate-800 dark:text-slate-100 dark:ring-slate-700 dark:hover:bg-slate-700">
                 1/…
               </button>
             </div>
-            <p class="mt-2 text-xs text-slate-400">
-              Beispiel: „1/50“ → 0.02
+            <p class="mt-2 text-xs text-slate-500 dark:text-slate-400">
+              Beispiel: „1/25“ → 0.04
             </p>
           </label>
         </div>
 
-        <div class="mt-5 rounded-2xl bg-slate-950/40 p-4 ring-1 ring-slate-800">
+        <div class="mt-5 rounded-2xl bg-slate-50 p-4 ring-1 ring-slate-200 dark:bg-slate-950/40 dark:ring-slate-800">
           <div class="flex items-center justify-between">
-            <span class="text-sm text-slate-300">Ergebnis</span>
+            <span class="text-sm text-slate-600 dark:text-slate-300">Ergebnis</span>
             <span id="bBadge"
-              class="hidden rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-200 ring-1 ring-emerald-500/20">
+              class="hidden rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-700 ring-1 ring-emerald-500/20
+                     dark:text-emerald-200">
               OK
             </span>
           </div>
           <div class="mt-2 flex flex-col gap-1">
             <div class="flex items-baseline justify-between">
-              <span class="text-sm text-slate-300">EV100</span>
+              <span class="text-sm text-slate-600 dark:text-slate-300">EV100</span>
               <span id="bEV" class="text-xl font-semibold tabular-nums">—</span>
             </div>
-            <p id="bHint" class="text-xs text-slate-400">Werte eingeben, um EV zu berechnen.</p>
+            <p id="bHint" class="text-xs text-slate-500 dark:text-slate-400">Werte eingeben, um EV zu berechnen.</p>
           </div>
         </div>
       </section>
 
       <!-- Comparison -->
-      <section class="lg:col-span-2 rounded-2xl bg-slate-900/60 p-6 ring-1 ring-slate-800 backdrop-blur">
+      <section class="lg:col-span-2 rounded-2xl bg-white p-6 ring-1 ring-slate-200 backdrop-blur
+                      dark:bg-slate-900/60 dark:ring-slate-800">
         <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h2 class="text-lg font-semibold">Vergleich</h2>
-            <p class="mt-1 text-sm text-slate-300">
+            <p class="mt-1 text-sm text-slate-600 dark:text-slate-300">
               ΔEV = EV(B) − EV(A). Positive Werte bedeuten: B ist dunkler (weniger Licht) als A.
             </p>
           </div>
           <span id="cmpPill"
-            class="hidden rounded-full bg-slate-800 px-3 py-1 text-xs font-semibold text-slate-200 ring-1 ring-slate-700">
+            class="hidden rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700 ring-1 ring-slate-200
+                   dark:bg-slate-800 dark:text-slate-200 dark:ring-slate-700">
             —
           </span>
         </div>
 
         <div class="mt-5 grid gap-4 md:grid-cols-3">
-          <div class="rounded-2xl bg-slate-950/40 p-4 ring-1 ring-slate-800">
-            <div class="text-sm text-slate-300">ΔEV (Stops)</div>
+          <div class="rounded-2xl bg-slate-50 p-4 ring-1 ring-slate-200 dark:bg-slate-950/40 dark:ring-slate-800">
+            <div class="text-sm text-slate-600 dark:text-slate-300">ΔEV (Stops)</div>
             <div id="dEV" class="mt-1 text-2xl font-semibold tabular-nums">—</div>
-            <div id="dEVHint" class="mt-2 text-xs text-slate-400">Beide Einstellungen ausfüllen.</div>
+            <div id="dEVHint" class="mt-2 text-xs text-slate-500 dark:text-slate-400">Beide Einstellungen ausfüllen.</div>
           </div>
 
-          <div class="rounded-2xl bg-slate-950/40 p-4 ring-1 ring-slate-800">
-            <div class="text-sm text-slate-300">Lichtfaktor (B vs A)</div>
+          <div class="rounded-2xl bg-slate-50 p-4 ring-1 ring-slate-200 dark:bg-slate-950/40 dark:ring-slate-800">
+            <div class="text-sm text-slate-600 dark:text-slate-300">Lichtfaktor (B vs A)</div>
             <div id="ratio" class="mt-1 text-2xl font-semibold tabular-nums">—</div>
-            <div class="mt-2 text-xs text-slate-400">Faktor = 2^(−ΔEV). 0.5 bedeutet halb so viel Licht.</div>
+            <div class="mt-2 text-xs text-slate-500 dark:text-slate-400">Faktor = 2^(−ΔEV). 0.5 bedeutet halb so viel Licht.</div>
           </div>
 
-          <div class="rounded-2xl bg-slate-950/40 p-4 ring-1 ring-slate-800">
-            <div class="text-sm text-slate-300">Kurzinterpretation</div>
+          <div class="rounded-2xl bg-slate-50 p-4 ring-1 ring-slate-200 dark:bg-slate-950/40 dark:ring-slate-800">
+            <div class="text-sm text-slate-600 dark:text-slate-300">Kurzinterpretation</div>
             <div id="interp" class="mt-1 text-base font-semibold">—</div>
-            <div class="mt-2 text-xs text-slate-400">Bezieht sich auf EV100 (ISO 100).</div>
+            <div class="mt-2 text-xs text-slate-500 dark:text-slate-400">Bezieht sich auf EV100 (ISO 100).</div>
           </div>
         </div>
 
-        <!-- Restored details (from first version style) -->
-        <div class="mt-6 rounded-2xl bg-slate-950/30 p-4 ring-1 ring-slate-800">
+        <div class="mt-6 rounded-2xl bg-slate-50 p-4 ring-1 ring-slate-200 dark:bg-slate-950/30 dark:ring-slate-800">
           <details class="group">
-            <summary class="cursor-pointer list-none select-none text-sm font-medium text-slate-200">
+            <summary class="cursor-pointer list-none select-none text-sm font-medium text-slate-900 dark:text-slate-200">
               Formel / Annahmen anzeigen
-              <span class="ml-2 text-slate-400 group-open:hidden">(aufklappen)</span>
-              <span class="ml-2 hidden text-slate-400 group-open:inline">(zuklappen)</span>
+              <span class="ml-2 text-slate-500 dark:text-slate-400 group-open:hidden">(aufklappen)</span>
+              <span class="ml-2 hidden text-slate-500 dark:text-slate-400 group-open:inline">(zuklappen)</span>
             </summary>
-            <div class="mt-3 text-sm text-slate-300 leading-relaxed">
+            <div class="mt-3 text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
               <p class="mb-2">
                 <span class="font-medium">EV100 = log₂(N² / t)</span>, mit N = Blendenzahl und t = Belichtungszeit in Sekunden.
               </p>
-              <p class="text-slate-400 text-xs">
+              <p class="text-slate-600 dark:text-slate-400 text-xs">
                 ISO-Hinweis: Für ISO S gilt häufig <span class="font-medium">EV(S) = EV100 − log₂(S/100)</span>.
               </p>
             </div>
@@ -272,30 +291,33 @@
 
   <!-- Modal for fraction input -->
   <div id="modal" class="fixed inset-0 hidden items-center justify-center bg-black/60 p-4">
-    <div class="w-full max-w-md rounded-2xl bg-slate-900 p-5 ring-1 ring-slate-800">
+    <div class="w-full max-w-md rounded-2xl bg-white p-5 ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
       <div class="flex items-start justify-between gap-4">
         <div>
           <h3 class="text-base font-semibold">Zeit eingeben (Bruch)</h3>
-          <p class="mt-1 text-sm text-slate-300">Beispiel: <span class="font-medium">1/100</span> oder <span class="font-medium">0.01</span></p>
+          <p class="mt-1 text-sm text-slate-600 dark:text-slate-300">Beispiel: <span class="font-medium">1/100</span> oder <span class="font-medium">0.01</span></p>
         </div>
         <button id="modalClose"
-          class="rounded-xl bg-slate-800 px-3 py-2 text-sm font-medium ring-1 ring-slate-700 hover:bg-slate-750 focus:outline-none focus:ring-2 focus:ring-indigo-400">
+          class="rounded-xl bg-slate-100 px-3 py-2 text-sm font-medium text-slate-900 ring-1 ring-slate-300 hover:bg-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-400
+                 dark:bg-slate-800 dark:text-slate-100 dark:ring-slate-700 dark:hover:bg-slate-700">
           Schließen
         </button>
       </div>
 
       <div class="mt-4">
         <label class="block">
-          <span class="text-sm font-medium text-slate-200">Zeit</span>
-          <input id="modalInput" type="text" placeholder="z. B. 1/50"
-            class="mt-2 w-full rounded-xl bg-slate-950/40 px-4 py-3 ring-1 ring-slate-800 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-400" />
+          <span class="text-sm font-medium text-slate-900 dark:text-slate-200">Zeit</span>
+          <input id="modalInput" type="text" placeholder="z. B. 1/25"
+            class="mt-2 w-full rounded-xl bg-white px-4 py-3 text-slate-900 ring-1 ring-slate-300 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-400
+                   dark:bg-slate-950/40 dark:text-slate-100 dark:ring-slate-800 dark:placeholder:text-slate-500" />
         </label>
-        <p id="modalErr" class="mt-2 hidden text-sm text-rose-300"></p>
+        <p id="modalErr" class="mt-2 hidden text-sm text-rose-600 dark:text-rose-300"></p>
       </div>
 
       <div class="mt-5 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
         <button id="modalCancel"
-          class="rounded-xl bg-slate-900 px-4 py-3 text-sm font-medium text-slate-200 ring-1 ring-slate-800 hover:bg-slate-850 focus:outline-none focus:ring-2 focus:ring-indigo-400">
+          class="rounded-xl bg-white px-4 py-3 text-sm font-medium text-slate-900 ring-1 ring-slate-300 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-400
+                 dark:bg-slate-900 dark:text-slate-200 dark:ring-slate-800 dark:hover:bg-slate-800">
           Abbrechen
         </button>
         <button id="modalApply"
@@ -309,7 +331,6 @@
   <script>
     // ---------- Utility ----------
     const $ = (id) => document.getElementById(id);
-
     function isFinitePositive(n) { return Number.isFinite(n) && n > 0; }
     function log2(x) { return Math.log(x) / Math.log(2); }
     function calcEV(N, t) { return log2((N * N) / t); }
@@ -335,103 +356,15 @@
       return { ok: true, value: v };
     }
 
-    // ---------- Theme (Dark/White) ----------
-    const THEME_KEY = "evcalc_theme"; // "dark" | "light"
-
-    function applyTheme(theme) {
-      const body = document.body;
-      if (theme === "light") {
-        body.className = "min-h-screen bg-slate-50 text-slate-900";
-        // swap common dark classes via a minimal approach: add a "light" marker and rely on JS to patch key nodes
-        body.dataset.theme = "light";
-        $("themeBtn").textContent = "Dark mode";
-      } else {
-        body.className = "min-h-screen bg-slate-950 text-slate-100";
-        body.dataset.theme = "dark";
-        $("themeBtn").textContent = "White mode";
-      }
-      patchThemeClasses();
-    }
-
-    function patchThemeClasses() {
-      // Patch a small set of elements for a clean light mode without rewriting markup.
-      const light = document.body.dataset.theme === "light";
-
-      // Cards/containers
-      document.querySelectorAll("section.rounded-2xl").forEach(el => {
-        if (light) {
-          el.classList.remove("bg-slate-900/60","ring-slate-800");
-          el.classList.add("bg-white","ring-slate-200");
-        } else {
-          el.classList.remove("bg-white","ring-slate-200");
-          el.classList.add("bg-slate-900/60","ring-slate-800");
-        }
-      });
-
-      // Inner panels
-      document.querySelectorAll(".bg-slate-950\\/40, .bg-slate-950\\/30").forEach(el => {
-        if (light) {
-          el.classList.remove("bg-slate-950/40","bg-slate-950/30","ring-slate-800");
-          el.classList.add("bg-slate-50","ring-slate-200");
-        } else {
-          el.classList.remove("bg-slate-50","ring-slate-200");
-          // choose original opacity based on previous marker
-          // (keep it simple: default to /40)
-          if (!el.classList.contains("bg-slate-950/30") && !el.classList.contains("bg-slate-950/40")) {
-            el.classList.add("bg-slate-950/40");
-          }
-          el.classList.add("ring-slate-800");
-        }
-      });
-
-      // Inputs/selects
-      document.querySelectorAll("input, select").forEach(el => {
-        if (light) {
-          el.classList.remove("bg-slate-950/40","ring-slate-800","placeholder:text-slate-500");
-          el.classList.add("bg-white","ring-slate-300","placeholder:text-slate-400");
-        } else {
-          el.classList.remove("bg-white","ring-slate-300","placeholder:text-slate-400");
-          // avoid touching modal input twice; still ok
-          el.classList.add("bg-slate-950/40","ring-slate-800","placeholder:text-slate-500");
-        }
-      });
-
-      // Buttons (keep consistent but slightly adjust)
-      document.querySelectorAll("button").forEach(el => {
-        if (el.id === "modalApply") return; // keep primary indigo
-        if (light) {
-          el.classList.remove("bg-slate-900","bg-slate-800","ring-slate-800","ring-slate-700","text-slate-100","text-slate-200");
-          el.classList.add("bg-slate-100","ring-slate-300","text-slate-900");
-        } else {
-          // best-effort restore (buttons already have base classes in markup)
-          el.classList.remove("bg-slate-100","ring-slate-300","text-slate-900");
-        }
-      });
-
-      // Muted text
-      document.querySelectorAll(".text-slate-300, .text-slate-400, .text-slate-500").forEach(el => {
-        if (light) {
-          el.classList.remove("text-slate-300","text-slate-400","text-slate-500");
-          el.classList.add("text-slate-600");
-        } else {
-          // best-effort: do nothing; base classes remain on non-patched nodes
-          // (we only changed nodes we touched above)
-        }
-      });
-
-      // Badges/pills: keep as-is (they look fine on light too)
-    }
+    // ---------- Aperture series + navigator ----------
 
     // ---------- Aperture series + navigator ----------
     const fullOnly = [1.0, 1.4, 2.0, 2.8, 4.0, 5.6, 8.0, 11, 16, 22, 32];
-
-    // 1/3-stop-ish list (common rounded f-numbers)
     const thirdStops = [
       0.7,0.8,0.9,1.0,1.1,1.2,1.4,1.6,1.8,2.0,2.2,2.5,2.8,3.2,3.5,4.0,4.5,5.0,5.6,6.3,7.1,8.0,9.0,10,11,13,14,16,18,20,22,25,29,32
     ];
 
     function getSeries(mode){ return mode === "full" ? fullOnly : thirdStops; }
-
     function nearestIndex(series, value){
       let bestI = 0, bestD = Infinity;
       for (let i=0;i<series.length;i++){
@@ -473,7 +406,7 @@
       }
     }
 
-    // ---------- EV computation + restored UI bits ----------
+    // ---------- EV computation ----------
     const aN = $("aN"), aT = $("aT"), bN = $("bN"), bT = $("bT");
     const aEV = $("aEV"), bEV = $("bEV"), dEV = $("dEV"), ratio = $("ratio"), interp = $("interp");
     const aHint = $("aHint"), bHint = $("bHint"), dEVHint = $("dEVHint");
@@ -490,7 +423,6 @@
       const N2 = Number(String(bN.value).replace(",", "."));
       const t2 = Number(String(bT.value).replace(",", "."));
 
-      // A
       if (isFinitePositive(N1) && isFinitePositive(t1)) {
         const ev1 = calcEV(N1, t1);
         aEV.textContent = fmt(ev1, 2);
@@ -502,7 +434,6 @@
         setBadge(aBadge, false);
       }
 
-      // B
       if (isFinitePositive(N2) && isFinitePositive(t2)) {
         const ev2 = calcEV(N2, t2);
         bEV.textContent = fmt(ev2, 2);
@@ -514,7 +445,6 @@
         setBadge(bBadge, false);
       }
 
-      // Comparison
       if (isFinitePositive(N1) && isFinitePositive(t1) && isFinitePositive(N2) && isFinitePositive(t2)) {
         const ev1 = calcEV(N1, t1);
         const ev2 = calcEV(N2, t2);
@@ -523,7 +453,7 @@
         dEV.textContent = fmt(delta, 2);
         dEVHint.textContent = "ΔEV in Stops (EV(B) − EV(A)).";
 
-        const lightFactor = Math.pow(2, -delta); // B relative to A
+        const lightFactor = Math.pow(2, -delta);
         ratio.textContent = fmt(lightFactor, 3) + "×";
 
         let msg;
@@ -533,7 +463,7 @@
         interp.textContent = msg;
 
         cmpPill.classList.remove("hidden");
-        cmpPill.textContent = delta > 0 ? "B dunkler" : (delta < 0 ? "B heller" : "gleich");
+        cmpPill.textContent = Math.abs(delta) < 0.05 ? "gleich" : (delta > 0 ? "B dunkler" : "B heller");
       } else {
         dEV.textContent = "—";
         ratio.textContent = "—";
@@ -565,7 +495,6 @@
       aT.addEventListener(evt, update);
       bN.addEventListener(evt, update);
       bT.addEventListener(evt, update);
-
       $("apInput").addEventListener(evt, updateApertureNav);
       $("apStep").addEventListener(evt, updateApertureNav);
     });
@@ -593,20 +522,23 @@
       if (e.key === "Escape") closeModal();
     });
 
-    // Aperture set buttons
     $("setPrevA").addEventListener("click", () => setAperture("aN", "apPrev"));
     $("setPrevB").addEventListener("click", () => setAperture("bN", "apPrev"));
     $("setNextA").addEventListener("click", () => setAperture("aN", "apNext"));
     $("setNextB").addEventListener("click", () => setAperture("bN", "apNext"));
 
-    // Example + reset (restored)
+    // Example: SAME EV (exact)
+    // A: f/2.8 @ 1/100s => N^2/t = 7.84/0.01 = 784
+    // B: f/5.6 @ 1/25s  => N^2/t = 31.36/0.04 = 784  => same EV100
     $("fillExampleBtn").addEventListener("click", () => {
-      aN.value = "2.6";
-      aT.value = "0.01"; // 1/100
+      aN.value = "2.8";
+      aT.value = "0.01";  // 1/100
       bN.value = "5.6";
-      bT.value = "0.02"; // 1/50
+      bT.value = "0.04";  // 1/25
+
       $("apInput").value = "2.8";
       $("apStep").value = "full";
+
       updateApertureNav();
       update();
     });
@@ -618,17 +550,8 @@
       update();
     });
 
-    // Theme toggle
-    $("themeBtn").addEventListener("click", () => {
-      const current = localStorage.getItem(THEME_KEY) || "dark";
-      const next = current === "dark" ? "light" : "dark";
-      localStorage.setItem(THEME_KEY, next);
-      applyTheme(next);
-    });
 
-    // Init
-    const savedTheme = localStorage.getItem(THEME_KEY) || "dark";
-    applyTheme(savedTheme);
+    // ---------- Init ----------
     updateApertureNav();
     update();
   </script>
