@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EV Rechner & Vergleich</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <meta name="color-scheme" content="dark light" />
+</head>
+
+<body class="min-h-screen bg-slate-950 text-slate-100">
+  <div class="mx-auto max-w-5xl px-4 py-10">
+    <header class="mb-8">
+      <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <h1 class="text-2xl font-semibold tracking-tight sm:text-3xl">EV Rechner & Vergleich</h1>
+          <p class="mt-2 text-sm text-slate-300">
+            Berechnet <span class="font-medium">EV100 = log₂(N² / t)</span> und vergleicht zwei Einstellungen (ΔEV in Stops).
+          </p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button id="fillExampleBtn"
+                  class="rounded-xl bg-slate-800 px-4 py-2 text-sm font-medium text-slate-100 ring-1 ring-slate-700 hover:bg-slate-750 focus:outline-none focus:ring-2 focus:ring-indigo-400">
+            Beispiel füllen
+          </button>
+          <button id="resetBtn"
+                  class="rounded-xl bg-slate-900 px-4 py-2 text-sm font-medium text-slate-200 ring-1 ring-slate-800 hover:bg-slate-850 focus:outline-none focus:ring-2 focus:ring-indigo-400">
+            Zurücksetzen
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="grid gap-6 lg:grid-cols-2">
+      <!-- Card: Setting A -->
+      <section class="rounded-2xl bg-slate-900/60 p-5 ring-1 ring-slate-800 backdrop-blur">
+        <div class="flex items-start justify-between gap-4">
+          <div>
+            <h2 class="text-lg font-semibold">Einstellung A</h2>
+            <p class="mt-1 text-sm text-slate-300">Blende (N) und Belichtungszeit (t) eingeben.</p>
+          </div>
+          <span class="inline-flex items-center rounded-full bg-indigo-500/10 px-3 py-1 text-xs font-semibold text-indigo-200 ring-1 ring-indigo-500/20">
+            EV100
+          </span>
+        </div>
+
+        <div class="mt-5 grid gap-4 sm:grid-cols-2">
+          <label class="block">
+            <span class="text-sm font-medium text-slate-200">Blende (f/N)</span>
+            <input id="aN" type="number" inputmode="decimal" step="0.1" min="0.1" placeholder="z. B. 2.8"
+                   class="mt-2 w-full rounded-xl bg-slate-950/40 px-4 py-3 text-slate-100 ring-1 ring-slate-800 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-400" />
+          </label>
+
+          <label class="block">
+            <span class="text-sm font-medium text-slate-200">Zeit (Sekunden)</span>
+            <div class="mt-2 flex gap-2">
+              <input id="aT" type="number" inputmode="decimal" step="0.0001" min="0.000001" placeholder="z. B. 0.01"
+                     class="w-full rounded-xl bg-slate-950/40 px-4 py-3 text-slate-100 ring-1 ring-slate-800 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-400" />
+              <button id="aParseBtn"
+                      class="shrink-0 rounded-xl bg-slate-800 px-4 py-3 text-sm font-medium text-slate-100 ring-1 ring-slate-700 hover:bg-slate-750 focus:outline-none focus:ring-2 focus:ring-indigo-400">
+                1/…
+              </button>
+            </div>
+            <p class="mt-2 text-xs text-slate-400">
+              Tipp: Gib <span class="font-medium">0.01</span> für 1/100s ein. Über <span class="font-medium">1/…</span> kannst du „1/100“ eingeben.
+            </p>
+          </label>
+        </div>
+
+        <div class="mt-5 rounded-2xl bg-slate-950/40 p-4 ring-1 ring-slate-800">
+          <div class="flex items-center justify-between">
+            <span class="text-sm text-slate-300">Ergebnis</span>
+            <span id="aBadge" class="hidden rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-200 ring-1 ring-emerald-500/20">
+              OK
+            </span>
+          </div>
+          <div class="mt-2 flex flex-col gap-1">
+            <div class="flex items-baseline justify-between">
+              <span class="text-sm text-slate-300">EV100</span>
+              <span id="aEV" class="text-xl font-semibold tabular-nums">—</span>
+            </div>
+            <p id="aHint" class="text-xs text-slate-400">Werte eingeben, um EV zu berechnen.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Card: Setting B -->
+      <section class="rounded-2xl bg-slate-900/60 p-5 ring-1 ring-slate-800 backdrop-blur">
+        <div class="flex items-start justify-between gap-4">
+          <div>
+            <h2 class="text-lg font-semibold">Einstellung B</h2>
+            <p class="mt-1 text-sm text-slate-300">Zum Vergleich mit Einstellung A.</p>
+          </div>
+          <span class="inline-flex items-center rounded-full bg-indigo-500/10 px-3 py-1 text-xs font-semibold text-indigo-200 ring-1 ring-indigo-500/20">
+            EV100
+          </span>
+        </div>
+
+        <div class="mt-5 grid gap-4 sm:grid-cols-2">
+          <label class="block">
+            <span class="text-sm font-medium text-slate-200">Blende (f/N)</span>
+            <input id="bN" type="number" inputmode="decimal" step="0.1" min="0.1" placeholder="z. B. 5.6"
+                   class="mt-2 w-full rounded-xl bg-slate-950/40 px-4 py-3 text-slate-100 ring-1 ring-slate-800 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-400" />
+          </label>
+
+          <label class="block">
+            <span class="text-sm font-medium text-slate-200">Zeit (Sekunden)</span>
+            <div class="mt-2 flex gap-2">
+              <input id="bT" type="number" inputmode="decimal" step="0.0001" min="0.000001" placeholder="z. B. 0.02"
+                     class="w-full rounded-xl bg-slate-950/40 px-4 py-3 text-slate-100 ring-1 ring-slate-800 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-400" />
+              <button id="bParseBtn"
+                      class="shrink-0 rounded-xl bg-slate-800 px-4 py-3 text-sm font-medium text-slate-100 ring-1 ring-slate-700 hover:bg-slate-750 focus:outline-none focus:ring-2 focus:ring-indigo-400">
+                1/…
+              </button>
+            </div>
+            <p class="mt-2 text-xs text-slate-400">
+              Beispiel: „1/50“ → <span class="font-medium">0.02</span>
+            </p>
+          </label>
+        </div>
+
+        <div class="mt-5 rounded-2xl bg-slate-950/40 p-4 ring-1 ring-slate-800">
+          <div class="flex items-center justify-between">
+            <span class="text-sm text-slate-300">Ergebnis</span>
+            <span id="bBadge" class="hidden rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-200 ring-1 ring-emerald-500/20">
+              OK
+            </span>
+          </div>
+          <div class="mt-2 flex flex-col gap-1">
+            <div class="flex items-baseline justify-between">
+              <span class="text-sm text-slate-300">EV100</span>
+              <span id="bEV" class="text-xl font-semibold tabular-nums">—</span>
+            </div>
+            <p id="bHint" class="text-xs text-slate-400">Werte eingeben, um EV zu berechnen.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Comparison -->
+      <section class="lg:col-span-2 rounded-2xl bg-slate-900/60 p-6 ring-1 ring-slate-800 backdrop-blur">
+        <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h2 class="text-lg font-semibold">Vergleich</h2>
+            <p class="mt-1 text-sm text-slate-300">
+              ΔEV = EV(B) − EV(A). Positive Werte bedeuten: B ist <span class="font-medium">dunkler</span> (weniger Licht) als A.
+            </p>
+          </div>
+          <div class="flex items-center gap-2">
+            <span id="cmpPill"
+                  class="hidden rounded-full bg-slate-800 px-3 py-1 text-xs font-semibold text-slate-200 ring-1 ring-slate-700">
+              —
+            </span>
+          </div>
+        </div>
+
+        <div class="mt-5 grid gap-4 md:grid-cols-3">
+          <div class="rounded-2xl bg-slate-950/40 p-4 ring-1 ring-slate-800">
+            <div class="text-sm text-slate-300">ΔEV (Stops)</div>
+            <div id="dEV" class="mt-1 text-2xl font-semibold tabular-nums">—</div>
+            <div id="dEVHint" class="mt-2 text-xs text-slate-400">Beide Einstellungen ausfüllen.</div>
+          </div>
+
+          <div class="rounded-2xl bg-slate-950/40 p-4 ring-1 ring-slate-800">
+            <div class="text-sm text-slate-300">Lichtfaktor (B vs A)</div>
+            <div id="ratio" class="mt-1 text-2xl font-semibold tabular-nums">—</div>
+            <div class="mt-2 text-xs text-slate-400">Faktor = 2^(−ΔEV). 0,5 bedeutet halb so viel Licht.</div>
+          </div>
+
+          <div class="rounded-2xl bg-slate-950/40 p-4 ring-1 ring-slate-800">
+            <div class="text-sm text-slate-300">Kurzinterpretation</div>
+            <div id="interp" class="mt-1 text-base font-semibold">—</div>
+            <div class="mt-2 text-xs text-slate-400">Diese Interpretation bezieht sich nur auf EV100 (ISO 100).</div>
+          </div>
+        </div>
+
+        <div class="mt-6 rounded-2xl bg-slate-950/30 p-4 ring-1 ring-slate-800">
+          <details class="group">
+            <summary class="cursor-pointer list-none select-none text-sm font-medium text-slate-200">
+              Formel / Annahmen anzeigen
+              <span class="ml-2 text-slate-400 group-open:hidden">(aufklappen)</span>
+              <span class="ml-2 hidden text-slate-400 group-open:inline">(zuklappen)</span>
+            </summary>
+            <div class="mt-3 text-sm text-slate-300 leading-relaxed">
+              <p class="mb-2">
+                EV100 = log₂(N² / t), mit N = Blendenzahl und t = Belichtungszeit in Sekunden.
+              </p>
+              <p class="text-slate-400 text-xs">
+                Hinweis: ISO wird hier nicht berücksichtigt. Für EV bei ISO S gilt EVS = EV100 − log₂(S/100).
+              </p>
+            </div>
+          </details>
+        </div>
+      </section>
+    </main>
+
+    <footer class="mt-8 text-xs text-slate-500">
+      Quellen: Exposure Value Definition (Wikipedia), Excel/Photografie-Tutorials sind nicht erforderlich für diese Implementierung.
+    </footer>
+  </div>
+
+  <!-- Modal for fraction input -->
+  <div id="modal"
+       class="fixed inset-0 hidden items-center justify-center bg-black/60 p-4">
+    <div class="w-full max-w-md rounded-2xl bg-slate-900 p-5 ring-1 ring-slate-800">
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <h3 class="text-base font-semibold">Zeit eingeben (Bruch)</h3>
+          <p class="mt-1 text-sm text-slate-300">Beispiel: <span class="font-medium">1/100</span> oder <span class="font-medium">0.01</span></p>
+        </div>
+        <button id="modalClose"
+                class="rounded-xl bg-slate-800 px-3 py-2 text-sm font-medium text-slate-100 ring-1 ring-slate-700 hover:bg-slate-750 focus:outline-none focus:ring-2 focus:ring-indigo-400">
+          Schließen
+        </button>
+      </div>
+
+      <div class="mt-4">
+        <label class="block">
+          <span class="text-sm font-medium text-slate-200">Zeit</span>
+          <input id="modalInput" type="text" placeholder="z. B. 1/50"
+                 class="mt-2 w-full rounded-xl bg-slate-950/40 px-4 py-3 text-slate-100 ring-1 ring-slate-800 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-400" />
+        </label>
+        <p id="modalErr" class="mt-2 hidden text-sm text-rose-300"></p>
+      </div>
+
+      <div class="mt-5 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+        <button id="modalCancel"
+                class="rounded-xl bg-slate-900 px-4 py-3 text-sm font-medium text-slate-200 ring-1 ring-slate-800 hover:bg-slate-850 focus:outline-none focus:ring-2 focus:ring-indigo-400">
+          Abbrechen
+        </button>
+        <button id="modalApply"
+                class="rounded-xl bg-indigo-500 px-4 py-3 text-sm font-semibold text-white hover:bg-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-300">
+          Übernehmen
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Helpers
+    const $ = (id) => document.getElementById(id);
+
+    function isFinitePositive(n) {
+      return Number.isFinite(n) && n > 0;
+    }
+
+    // log2 polyfill (should exist in modern browsers)
+    function log2(x) {
+      return Math.log(x) / Math.log(2);
+    }
+
+    function calcEV(N, t) {
+      // EV100 = log2(N^2 / t)
+      return log2((N * N) / t);
+    }
+
+    function formatNum(x, decimals = 2) {
+      if (!Number.isFinite(x)) return "—";
+      return x.toFixed(decimals);
+    }
+
+    function parseTimeInput(s) {
+      // Accept:
+      // - "0.01"
+      // - "1/100"
+      // - "1 / 100"
+      // - "1/ 100"
+      // - "  1/50  "
+      const str = String(s).trim().replace(",", ".");
+      if (!str) return { ok: false, value: null, error: "Bitte einen Wert eingeben." };
+
+      // Fraction?
+      if (str.includes("/")) {
+        const parts = str.split("/").map(p => p.trim());
+        if (parts.length !== 2) return { ok: false, value: null, error: "Ungültiges Format. Beispiel: 1/100." };
+        const a = Number(parts[0]);
+        const b = Number(parts[1]);
+        if (!Number.isFinite(a) || !Number.isFinite(b)) return { ok: false, value: null, error: "Bruch enthält keine gültigen Zahlen." };
+        if (b === 0) return { ok: false, value: null, error: "Division durch 0 ist nicht erlaubt." };
+        const v = a / b;
+        if (!(v > 0)) return { ok: false, value: null, error: "Zeit muss > 0 sein." };
+        return { ok: true, value: v, error: null };
+      }
+
+      // Plain number
+      const v = Number(str);
+      if (!Number.isFinite(v)) return { ok: false, value: null, error: "Bitte eine gültige Zahl eingeben." };
+      if (!(v > 0)) return { ok: false, value: null, error: "Zeit muss > 0 sein." };
+      return { ok: true, value: v, error: null };
+    }
+
+    // DOM refs
+    const aN = $("aN"), aT = $("aT"), bN = $("bN"), bT = $("bT");
+    const aEV = $("aEV"), bEV = $("bEV"), dEV = $("dEV"), ratio = $("ratio"), interp = $("interp");
+    const aHint = $("aHint"), bHint = $("bHint"), dEVHint = $("dEVHint");
+    const aBadge = $("aBadge"), bBadge = $("bBadge"), cmpPill = $("cmpPill");
+
+    // Modal state
+    let modalTarget = null;
+
+    function openModal(targetInput) {
+      modalTarget = targetInput;
+      $("modalInput").value = "";
+      $("modalErr").classList.add("hidden");
+      $("modal").classList.remove("hidden");
+      $("modal").classList.add("flex");
+      $("modalInput").focus();
+    }
+
+    function closeModal() {
+      $("modal").classList.add("hidden");
+      $("modal").classList.remove("flex");
+      modalTarget = null;
+    }
+
+    function setBadge(badgeEl, ok) {
+      if (ok) {
+        badgeEl.classList.remove("hidden");
+      } else {
+        badgeEl.classList.add("hidden");
+      }
+    }
+
+    function update() {
+      const N1 = Number(String(aN.value).replace(",", "."));
+      const t1 = Number(String(aT.value).replace(",", "."));
+      const N2 = Number(String(bN.value).replace(",", "."));
+      const t2 = Number(String(bT.value).replace(",", "."));
+
+      // A
+      if (isFinitePositive(N1) && isFinitePositive(t1)) {
+        const ev1 = calcEV(N1, t1);
+        aEV.textContent = formatNum(ev1, 2);
+        aHint.textContent = "EV100 berechnet aus N² / t.";
+        setBadge(aBadge, true);
+      } else {
+        aEV.textContent = "—";
+        aHint.textContent = "Werte eingeben, um EV zu berechnen.";
+        setBadge(aBadge, false);
+      }
+
+      // B
+      if (isFinitePositive(N2) && isFinitePositive(t2)) {
+        const ev2 = calcEV(N2, t2);
+        bEV.textContent = formatNum(ev2, 2);
+        bHint.textContent = "EV100 berechnet aus N² / t.";
+        setBadge(bBadge, true);
+      } else {
+        bEV.textContent = "—";
+        bHint.textContent = "Werte eingeben, um EV zu berechnen.";
+        setBadge(bBadge, false);
+      }
+
+      // Comparison
+      if (isFinitePositive(N1) && isFinitePositive(t1) && isFinitePositive(N2) && isFinitePositive(t2)) {
+        const ev1 = calcEV(N1, t1);
+        const ev2 = calcEV(N2, t2);
+        const delta = ev2 - ev1;
+
+        dEV.textContent = formatNum(delta, 2);
+        dEVHint.textContent = "ΔEV in Stops (EV(B) − EV(A)).";
+
+        const lightFactor = Math.pow(2, -delta); // B relative to A
+        ratio.textContent = formatNum(lightFactor, 3) + "×";
+
+        let msg;
+        if (Math.abs(delta) < 0.05) msg = "Nahezu identisch";
+        else if (delta > 0) msg = "B ist dunkler als A";
+        else msg = "B ist heller als A";
+        interp.textContent = msg;
+
+        cmpPill.classList.remove("hidden");
+        cmpPill.textContent = delta > 0 ? "B dunkler" : (delta < 0 ? "B heller" : "gleich");
+
+      } else {
+        dEV.textContent = "—";
+        ratio.textContent = "—";
+        interp.textContent = "—";
+        dEVHint.textContent = "Beide Einstellungen ausfüllen.";
+        cmpPill.classList.add("hidden");
+      }
+    }
+
+    // Events
+    ["input", "change"].forEach(evt => {
+      aN.addEventListener(evt, update);
+      aT.addEventListener(evt, update);
+      bN.addEventListener(evt, update);
+      bT.addEventListener(evt, update);
+    });
+
+    $("aParseBtn").addEventListener("click", () => openModal(aT));
+    $("bParseBtn").addEventListener("click", () => openModal(bT));
+
+    $("modalClose").addEventListener("click", closeModal);
+    $("modalCancel").addEventListener("click", closeModal);
+    $("modal").addEventListener("click", (e) => {
+      if (e.target === $("modal")) closeModal();
+    });
+
+    $("modalApply").addEventListener("click", () => {
+      const input = $("modalInput").value;
+      const parsed = parseTimeInput(input);
+      if (!parsed.ok) {
+        $("modalErr").textContent = parsed.error;
+        $("modalErr").classList.remove("hidden");
+        return;
+      }
+      if (modalTarget) {
+        modalTarget.value = String(parsed.value);
+      }
+      closeModal();
+      update();
+    });
+
+    $("modalInput").addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        $("modalApply").click();
+      }
+      if (e.key === "Escape") closeModal();
+    });
+
+    $("fillExampleBtn").addEventListener("click", () => {
+      // Example from your earlier discussion:
+      // A: f/2.6 and 1/100s => t = 0.01
+      // B: f/5.6 and 1/50s  => t = 0.02
+      aN.value = "2.6";
+      aT.value = "0.01";
+      bN.value = "5.6";
+      bT.value = "0.02";
+      update();
+    });
+
+    $("resetBtn").addEventListener("click", () => {
+      aN.value = ""; aT.value = ""; bN.value = ""; bT.value = "";
+      update();
+    });
+
+    // Initial paint
+    update();
+  </script>
+</body>
+</html>
