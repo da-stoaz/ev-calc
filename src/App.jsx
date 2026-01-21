@@ -4,6 +4,7 @@ import ApertureHelper from "./components/ApertureHelper.jsx";
 import SettingPanel from "./components/SettingPanel.jsx";
 import ComparisonPanel from "./components/ComparisonPanel.jsx";
 import FractionModal from "./components/FractionModal.jsx";
+import HyperfocalPanel from "./components/HyperfocalPanel.jsx";
 import { fmt } from "./utils/format.js";
 
 const fullOnly = [1.0, 1.4, 2.0, 2.8, 4.0, 5.6, 8.0, 11, 16, 22, 32];
@@ -68,6 +69,9 @@ export default function App() {
   const [modalTarget, setModalTarget] = useState(null);
   const [modalInput, setModalInput] = useState("");
   const [modalErr, setModalErr] = useState("");
+  const [hfF, setHfF] = useState("");
+  const [hfK, setHfK] = useState("");
+  const [hfZ, setHfZ] = useState("");
 
   const series = useMemo(() => (apStep === "full" ? fullOnly : thirdStops), [apStep]);
 
@@ -114,6 +118,14 @@ export default function App() {
       : delta > 0
         ? "B dunkler"
         : "B heller";
+
+  const hyperfocalDistance = useMemo(() => {
+    const f = parseNumber(hfF);
+    const k = parseNumber(hfK);
+    const z = parseNumber(hfZ);
+    if (!isFinitePositive(f) || !isFinitePositive(k) || !isFinitePositive(z)) return null;
+    return (f * f) / (k * z) + f;
+  }, [hfF, hfK, hfZ]);
 
   const handleSetAperture = (target) => {
     if (target === "a" && apPrev) setAN(String(apPrev));
@@ -224,6 +236,16 @@ export default function App() {
           lightFactor={lightFactor}
           interpretation={interpretation}
           pillLabel={comparisonPill}
+        />
+
+        <HyperfocalPanel
+          fValue={hfF}
+          kValue={hfK}
+          zValue={hfZ}
+          onFChange={setHfF}
+          onKChange={setHfK}
+          onZChange={setHfZ}
+          distance={hyperfocalDistance}
         />
       </main>
 
